@@ -8,7 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 
 const AnalyzeBMIInputSchema = z.object({
   height: z.number().describe('The height of the user in centimeters.'),
@@ -18,7 +18,7 @@ const AnalyzeBMIInputSchema = z.object({
 export type AnalyzeBMIInput = z.infer<typeof AnalyzeBMIInputSchema>;
 
 const AnalyzeBMIOutputSchema = z.object({
-  analysis: z.string().describe('The AI analysis of the BMI and personalized health recommendations.'),
+  analysis: z.string().describe('The AI analysis of the BMI and personalized health recommendations in Polish.'),
 });
 export type AnalyzeBMIOutput = z.infer<typeof AnalyzeBMIOutputSchema>;
 
@@ -30,13 +30,7 @@ const analyzeBMIPrompt = ai.definePrompt({
   name: 'analyzeBMIPrompt',
   input: {schema: AnalyzeBMIInputSchema},
   output: {schema: AnalyzeBMIOutputSchema},
-  prompt: `You are a health and wellness expert. Analyze the provided BMI and provide personalized health recommendations and lifestyle tips.
-
-Height: {{height}} cm
-Weight: {{weight}} kg
-BMI: {{bmi}}
-
-Analysis and Recommendations:`,
+  prompt: `Jesteś przyjaznym i zachęcającym asystentem zdrowia. Na podstawie następujących danych - BMI: {{bmi}}, Wzrost: {{height}} cm, Waga: {{weight}} kg - przedstaw krótką, spersonalizowaną analizę (2-3 akapity). Dołącz ogólne wskazówki dotyczące stylu życia i pozytywne zachęty. Ważne: nie udzielaj porad medycznych. Twoja odpowiedź powinna być sformułowana jako ogólna informacja o zdrowiu i dobrym samopoczuciu. Odpowiedz w języku polskim.`,
 });
 
 const analyzeBMIFlow = ai.defineFlow(

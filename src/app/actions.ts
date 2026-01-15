@@ -1,7 +1,6 @@
 'use server';
 
-import { run } from 'genkit';
-import { analyzeBmiFlow } from '@/ai/flows';
+import { analyzeBMI, AnalyzeBMIInput } from '@/ai/ai-bmi-analysis';
 import { z } from 'zod';
 
 const BmiSchema = z.object({
@@ -38,14 +37,16 @@ export async function getBmiAnalysis(formData: FormData): Promise<ActionState> {
   const bmi = weight / (heightInMeters * heightInMeters);
 
   try {
-    const analysis = await run(analyzeBmiFlow, { bmi, height, weight });
+    const input: AnalyzeBMIInput = { bmi, height, weight };
+    const result = await analyzeBMI(input);
     return {
       bmi: bmi,
-      analysis: analysis,
+      analysis: result.analysis,
     };
   } catch (error) {
     console.error('AI analysis failed:', error);
     return {
+      bmi: bmi,
       error: { _form: ['Wystąpił błąd podczas analizy AI. Spróbuj ponownie później.'] },
     };
   }

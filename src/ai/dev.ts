@@ -1,4 +1,4 @@
 import { config } from 'dotenv';
 config();
 
-import './flows/analyzeBmi';
+import './ai-bmi-analysis';
